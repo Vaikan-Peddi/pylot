@@ -33,7 +33,7 @@ def domify():
     title = DOMObject('title', content=['My HTML Page'])
     body = DOMObject('body', attributes={'bgcolor': 'aqua'})
 
-    h1 = DOMObject('h1', content=['Hello, World!'])
+    h1 = DOMObject('h1', content=['My first Pylot render!'])
     p = DOMObject('p', content=['This is a simple HTML page.'])
 
     br = DOMObject('br', self_closing=True)
@@ -44,19 +44,20 @@ def domify():
     li2 = DOMObject('li', content=['Item 2'])
     li3 = DOMObject('li', content=['Item 3'])
 
-    ul.add_child(li1)
-    ul.add_child(li2)
-    ul.add_child(li3)
+    html.add_child(head)
+    html.add_child(body)
 
     head.add_child(title)
+
     body.add_child(h1)
     body.add_child(p)
     body.add_child(br)
     body.add_child(img)
     body.add_child(ul)
 
-    html.add_child(head)
-    html.add_child(body)
+    ul.add_child(li1)
+    ul.add_child(li2)
+    ul.add_child(li3)
 
     return html
 
