@@ -7,9 +7,10 @@ class DOMObject:
         self.attributes = attributes or {}
         self.content = content or []
         self.self_closing = self_closing
+        self.children = []
 
     def add_child(self, child):
-        self.content.append(child)
+        self.children.append(child)
 
     def __str__(self):
         attribute_str = ' '.join([f'{key}="{value}"' for key, value in self.attributes.items()])
@@ -24,42 +25,39 @@ class DOMObject:
         if self.self_closing:
             return f'<{self.tag}{attribute_str} />'
         else:
-            return f'<{self.tag}{attribute_str}>{content_str}</{self.tag}>'
+            children_str = ''.join([str(child) for child in self.children])
+            return f'<{self.tag}{attribute_str}>{content_str}{children_str}</{self.tag}>'
 
 
-def domify():
-    html = DOMObject('html')
-    head = DOMObject('head')
-    title = DOMObject('title', content=['My HTML Page'])
-    body = DOMObject('body', attributes={'bgcolor': 'aqua'})
+# Example usage:
+html = DOMObject('html')
+head = DOMObject('head')
+title = DOMObject('title', content=['Pylot'])
+body = DOMObject('body', attributes={'bgcolor': 'aqua'})
 
-    h1 = DOMObject('h1', content=['My first Pylot render!'])
-    p = DOMObject('p', content=['This is a simple HTML page.'])
+h1 = DOMObject('h1', content=['My first Pylot page'])
+p = DOMObject('p', content=['This is a simple HTML page.'])
 
-    br = DOMObject('br', self_closing=True)
-    img = DOMObject('img', attributes={'src': 'example.jpg', 'alt': 'Example Image'}, self_closing=True)
+br = DOMObject('br', self_closing=True)
+img = DOMObject('img', attributes={'src': 'example.jpg', 'alt': 'Example Image'}, self_closing=True)
 
-    ul = DOMObject('ul')
-    li1 = DOMObject('li', content=['Item 1'])
-    li2 = DOMObject('li', content=['Item 2'])
-    li3 = DOMObject('li', content=['Item 3'])
+ul = DOMObject('ul')
+li1 = DOMObject('li', content=['Item 1'])
+li2 = DOMObject('li', content=['Item 2'])
+li3 = DOMObject('li', content=['Item 3'])
 
-    html.add_child(head)
-    html.add_child(body)
+ul.children.extend([li1, li2, li3])
 
-    head.add_child(title)
+head.children.append(title)
 
-    body.add_child(h1)
-    body.add_child(p)
-    body.add_child(br)
-    body.add_child(img)
-    body.add_child(ul)
+body_content = [h1, p, br, img, ul]
+body.children.extend(body_content + body_content)
 
-    ul.add_child(li1)
-    ul.add_child(li2)
-    ul.add_child(li3)
+html.children.extend([head, body])
 
-    return html
 
-html_tree = domify()
-print(html_tree)
+print(html)
+
+
+with open("pages/index.html", 'w+') as index:
+    index.write(str(html))
